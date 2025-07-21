@@ -28,19 +28,23 @@ export const getTeams = async ({
       .from('teams')
       .select(`
         *,
-        members:team_members(*, user:users(nickname, avatar_url))
+        team_members(
+          id,
+          user_id,
+          role,
+          joined_at,
+          users(nickname, avatar_url)
+        )
       `)
       .order('elo', { ascending: false })
       .range(offset, offset + limit - 1);
 
-    // Aplicar filtro de status
     if (status === 'recruiting') {
       query = query.eq('is_recruiting', true);
     } else if (status === 'full') {
       query = query.eq('is_recruiting', false);
     }
 
-    // Aplicar filtro de busca
     if (searchTerm) {
       query = query.or(
         `name.ilike.%${searchTerm}%,tag.ilike.%${searchTerm}%,region.ilike.%${searchTerm}%`
@@ -51,7 +55,16 @@ export const getTeams = async ({
 
     if (error) throw error;
 
-    return (data || []) as TeamWithMembers[];
+    // Transformar dados para o formato esperado
+    const teams = (data || []).map(team => ({
+      ...team,
+      members: (team.team_members || []).map((member: any) => ({
+        ...member,
+        user: member.users
+      }))
+    }));
+
+    return teams as TeamWithMembers[];
   } catch (error) {
     console.error('Erro ao buscar times:', error);
     return [];

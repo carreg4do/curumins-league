@@ -30,7 +30,7 @@ const Register = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Validações
+    // Validações básicas
     if (formData.password !== formData.confirmPassword) {
       toast({
         title: "Erro",
@@ -62,7 +62,108 @@ const Register = () => {
     }
 
     try {
-      // Tentar registro mock primeiro (mais confiável para desenvolvimento)
+      // Tentar registro com Supabase primeiro
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: {
+              nickname: formData.nickname,
+              city: formData.city
+            }
+          }
+        });
+
+        if (!error && data.user) {
+          toast({
+            title: "Conta criada com sucesso!",
+            description: `Bem-vindo à Liga Norte, ${formData.nickname}!`
+          });
+
+          // Aguardar criação do usuário na tabela
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          
+          // Atualizar contexto
+          await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          navigate('/dashboard');
+          return;
+        }
+        
+        if (error) {
+          throw error;
+        }
+      } catch (supabaseError: any) {
+        // Fallback para sistema mock
+        const mockResult = await mockRegister({
+          email: formData.email,
+          password: formData.password,
+          nickname: formData.nickname,
+          city: formData.city
+        });
+        
+        if (mockResult.success && mockResult.user) {
+          toast({
+            title: "Conta criada com sucesso!",
+            description: `Bem-vindo à Liga Norte, ${mockResult.user.nickname}!`
+          });
+
+          await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          navigate('/dashboard');
+          return;
+        } else {
+          throw new Error(mockResult.error || 'Erro ao criar conta');
+        }
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro ao criar conta",
+        description: error.message || "Ocorreu um erro inesperado",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSteamLogin = async () => {
+    try {
+      try {
+        loginWithSteam();
+      } catch (steamError: any) {
+        setIsLoading(true);
+        const mockResult = await mockSteamLogin();
+        
+        if (mockResult.success && mockResult.user) {
+          toast({
+            title: "Login Steam realizado com sucesso!",
+            description: `Bem-vindo, ${mockResult.user.nickname}!`
+          });
+
+          await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          navigate('/dashboard');
+        } else {
+          throw new Error(mockResult.error || 'Erro no login Steam');
+        }
+        
+        setIsLoading(false);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro ao iniciar login Steam",
+        description: error.message || "Não foi possível iniciar o login via Steam",
+        variant: "destructive"
+      });
+      setIsLoading(false);
+    }
+  };
       const mockResult = await mockRegister({
         email: formData.email,
         password: formData.password,

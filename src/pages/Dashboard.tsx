@@ -3,6 +3,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trophy, Users, Target, Clock, Play, Settings, User, Gamepad2, Zap, Shield, Star } from 'lucide-react';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { FadeIn } from '@/components/ui/fade-in';
 import { useState, useEffect } from 'react';
 
 const Dashboard = () => {
@@ -37,10 +39,12 @@ const Dashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gaming-hero">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-          <p className="mt-4 text-muted-foreground">Carregando dashboard...</p>
-        </div>
+        <FadeIn>
+          <div className="text-center">
+            <LoadingSpinner size="lg" className="mb-4" />
+            <p className="text-muted-foreground">Carregando dashboard...</p>
+          </div>
+        </FadeIn>
       </div>
     );
   }
@@ -48,16 +52,19 @@ const Dashboard = () => {
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gaming-hero">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gaming-gradient mb-4">Acesso negado</h1>
-          <p className="text-muted-foreground">Você precisa estar logado para acessar esta página.</p>
-        </div>
+        <FadeIn>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gaming-gradient mb-4">Acesso negado</h1>
+            <p className="text-muted-foreground">Você precisa estar logado para acessar esta página.</p>
+          </div>
+        </FadeIn>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gaming-hero">
+    <FadeIn>
+      <div className="min-h-screen bg-gaming-hero">
       {/* Header Principal */}
       <div className="border-b border-border bg-card/50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-6">
@@ -114,7 +121,8 @@ const Dashboard = () => {
           {/* Painel Principal de Jogo */}
           <div className="lg:col-span-3 space-y-6">
             {/* Botão Principal de Matchmaking */}
-            <Card className="card-gaming-highlight border-primary/20">
+            <FadeIn delay={200}>
+              <Card className="card-gaming-highlight border-primary/20 hover:border-primary/40 transition-all duration-300">
               <CardContent className="p-8 text-center">
                 <div className="mb-6">
                   <Gamepad2 className="h-16 w-16 text-primary mx-auto mb-4" />
@@ -136,9 +144,11 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            </FadeIn>
 
             {/* Estatísticas Detalhadas */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <FadeIn delay={300}>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <Card className="card-gaming-highlight hover:border-green-500/50 transition-colors">
                 <CardContent className="p-4 text-center">
                   <Trophy className="h-8 w-8 text-green-500 mx-auto mb-2" />
@@ -175,9 +185,11 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             </div>
+            </FadeIn>
 
             {/* Partidas Recentes */}
-            <Card className="card-gaming-highlight">
+            <FadeIn delay={400}>
+              <Card className="card-gaming-highlight">
               <CardHeader>
                 <CardTitle className="text-gaming-gradient flex items-center">
                   <Clock className="h-5 w-5 mr-2" />
@@ -212,12 +224,14 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            </FadeIn>
           </div>
 
           {/* Painel Lateral */}
           <div className="space-y-6">
             {/* Ações Rápidas */}
-            <Card className="card-gaming-highlight">
+            <FadeIn delay={500}>
+              <Card className="card-gaming-highlight">
               <CardHeader>
                 <CardTitle className="text-gaming-gradient">Menu Rápido</CardTitle>
                 <CardDescription>Acesso rápido às funcionalidades</CardDescription>
@@ -259,9 +273,11 @@ const Dashboard = () => {
                 </Button>
               </CardContent>
             </Card>
+            </FadeIn>
 
             {/* Status do Servidor */}
-            <Card className="card-gaming-highlight">
+            <FadeIn delay={600}>
+              <Card className="card-gaming-highlight">
               <CardHeader>
                 <CardTitle className="text-gaming-gradient">Status do Servidor</CardTitle>
               </CardHeader>
@@ -292,9 +308,11 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            </FadeIn>
 
             {/* Conquistas Recentes */}
-            <Card className="card-gaming-highlight">
+            <FadeIn delay={700}>
+              <Card className="card-gaming-highlight">
               <CardHeader>
                 <CardTitle className="text-gaming-gradient">Conquistas</CardTitle>
               </CardHeader>
@@ -317,10 +335,12 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            </FadeIn>
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </FadeIn>
   );
 };
 

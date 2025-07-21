@@ -25,62 +25,43 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      console.log('Iniciando processo de login...');
-      
-      // Tentar login com Supabase primeiro
+      // Tentar login com Supabase
       try {
-        console.log('Tentando login com Supabase...');
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
 
-        console.log('Resposta do Supabase:', { data, error });
-
         if (!error && data.user) {
-          console.log('Login Supabase bem-sucedido!');
           toast({
             title: "Login realizado com sucesso!",
             description: "Bem-vindo de volta à Liga Norte."
           });
 
-          // Atualizar contexto de autenticação e aguardar
+          // Aguardar atualização do contexto
           await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          // Aguardar um pouco mais para garantir que o estado foi atualizado
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Navegar para o dashboard
           navigate('/dashboard');
           return;
         }
         
         if (error) {
-          console.log('Erro no Supabase:', error);
           throw error;
         }
       } catch (supabaseError: any) {
-        console.log('Erro no Supabase, tentando autenticação mock:', supabaseError);
-        
-        // Fallback para autenticação mock
-        console.log('Tentando login mock...');
+        // Fallback para sistema mock
         const mockResult = await mockLogin(email, password);
-        console.log('Resultado do login mock:', mockResult);
         
         if (mockResult.success && mockResult.user) {
-          console.log('Login mock bem-sucedido!');
           toast({
             title: "Login realizado com sucesso!",
             description: `Bem-vindo de volta, ${mockResult.user.nickname}!`
           });
 
-          // Atualizar contexto de autenticação e aguardar
           await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          // Aguardar um pouco mais para garantir que o estado foi atualizado
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Navegar para o dashboard
           navigate('/dashboard');
           return;
         } else {
@@ -88,7 +69,6 @@ const Login = () => {
         }
       }
     } catch (error: any) {
-      console.error('Erro final no login:', error);
       toast({
         title: "Erro ao fazer login",
         description: error.message || "Credenciais inválidas",
@@ -103,13 +83,9 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      // Tentar login Steam real primeiro
       try {
         loginWithSteam();
       } catch (steamError: any) {
-        console.log('Erro no Steam real, usando Steam mock:', steamError);
-        
-        // Fallback para Steam mock
         const mockResult = await mockSteamLogin();
         
         if (mockResult.success && mockResult.user) {
@@ -118,13 +94,9 @@ const Login = () => {
             description: `Bem-vindo, ${mockResult.user.nickname}!`
           });
 
-          // Atualizar contexto de autenticação e aguardar
           await refreshUser();
+          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          // Aguardar um pouco mais para garantir que o estado foi atualizado
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // Navegar para o dashboard
           navigate('/dashboard');
         } else {
           throw new Error(mockResult.error || 'Erro no login Steam');

@@ -163,4 +163,39 @@
   .hover-float {
     @apply transition-transform duration-300 hover:-translate-y-2;
   }
+
+  /* Smooth Transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .transition-bounce {
+    @apply transition-all duration-500 ease-out hover:scale-105;
+  }
+
+  /* Loading States */
+  .loading-shimmer {
+    @apply animate-pulse bg-gradient-to-r from-muted/50 via-muted/80 to-muted/50 bg-[length:200%_100%];
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* Enhanced Card Hover Effects */
+  .card-gaming {
+    @apply bg-card border border-border rounded-xl p-6 
+           transition-all duration-300 hover:border-primary/50
+           hover:shadow-[var(--shadow-gaming)] hover:scale-[1.02]
+           hover:bg-card/80 backdrop-blur-sm;
+  }
+
+  .card-gaming-highlight {
+    @apply bg-gradient-to-br from-card to-muted border-2 border-primary/30
+           rounded-xl p-6 transition-all duration-300
+           hover:border-primary hover:shadow-[var(--glow-primary)]
+           hover:scale-[1.02] backdrop-blur-sm;
+  }
 }
