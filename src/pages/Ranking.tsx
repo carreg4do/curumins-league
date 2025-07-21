@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Trophy, Filter, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { FadeIn } from '@/components/ui/fade-in';
 
 const Ranking = () => {
   const [filter, setFilter] = useState('global');
@@ -150,32 +151,38 @@ const Ranking = () => {
         </div>
 
         {/* Ranking List */}
-        <div className="space-y-4">
-          {filteredPlayers.map((player) => (
-            <PlayerCard
-              key={player.rank}
-              rank={player.rank}
-              name={player.name}
-              elo={player.elo}
-              wins={player.wins}
-              losses={player.losses}
-              city={player.city}
-              change={player.change}
-              isCurrentUser={player.isCurrentUser}
-            />
-          ))}
-        </div>
+        <FadeIn delay={200}>
+          <div className="space-y-4">
+            {filteredPlayers.map((player) => (
+              <FadeIn key={player.rank} delay={player.rank * 50}>
+                <PlayerCard
+                  key={player.rank}
+                  rank={player.rank}
+                  name={player.name}
+                  elo={player.elo}
+                  wins={player.wins}
+                  losses={player.losses}
+                  city={player.city}
+                  change={player.change}
+                  isCurrentUser={player.isCurrentUser}
+                />
+              </FadeIn>
+            ))}
+          </div>
+        </FadeIn>
 
         {filteredPlayers.length === 0 && (
-          <div className="text-center py-12">
-            <Trophy className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-muted-foreground mb-2">
-              Nenhum jogador encontrado
-            </h3>
-            <p className="text-muted-foreground">
-              Tente ajustar os filtros ou termo de busca.
-            </p>
-          </div>
+          <FadeIn>
+            <div className="text-center py-12">
+              <Trophy className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-muted-foreground mb-2">
+                Nenhum jogador encontrado
+              </h3>
+              <p className="text-muted-foreground">
+                Tente ajustar os filtros ou termo de busca.
+              </p>
+            </div>
+          </FadeIn>
         )}
 
         {/* CTA */}
