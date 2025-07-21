@@ -1,5 +1,6 @@
 import { supabase } from '../supabase/client';
 import { Database } from '../supabase/types';
+import { mockTeams, MockTeam } from '@/data/mockTeams';
 
 export type Team = Database['public']['Tables']['teams']['Row'];
 export type TeamMember = Database['public']['Tables']['team_members']['Row'];
@@ -7,6 +8,42 @@ export type TeamRequest = Database['public']['Tables']['team_requests']['Row'];
 
 export type TeamWithMembers = Team & {
   members: (TeamMember & { user: { nickname: string; avatar_url: string | null } })[];
+};
+
+/**
+ * Converte um time mock para o formato TeamWithMembers
+ */
+const convertMockTeamToTeamWithMembers = (mockTeam: MockTeam): TeamWithMembers => {
+  const teamMembers = mockTeam.members.map(member => ({
+    id: member.user_id,
+    team_id: mockTeam.id,
+    user_id: member.user_id,
+    role: member.role,
+    joined_at: new Date().toISOString(),
+    user: {
+      nickname: member.user.nickname,
+      avatar_url: member.user.avatar_url || null
+    }
+  }));
+
+  return {
+    id: mockTeam.id,
+    name: mockTeam.name,
+    tag: mockTeam.tag,
+    description: null,
+    region: mockTeam.region,
+    logo_url: null,
+    cover_url: null,
+    elo: mockTeam.elo,
+    wins: mockTeam.wins,
+    losses: mockTeam.losses,
+    is_recruiting: mockTeam.is_recruiting,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    members: teamMembers,
+    // Adicionar team_members para compatibilidade com o TeamCard
+    team_members: teamMembers
+  } as TeamWithMembers & { team_members: typeof teamMembers };
 };
 
 /**
@@ -23,6 +60,8 @@ export const getTeams = async ({
   limit?: number;
   offset?: number;
 } = {}): Promise<TeamWithMembers[]> => {
+  console.log('getTeams chamado com:', { searchTerm, status, limit, offset });
+  
   try {
     let query = supabase
       .from('teams')
@@ -64,10 +103,46 @@ export const getTeams = async ({
       }))
     }));
 
+    console.log('Times do Supabase carregados:', teams.length);
     return teams as TeamWithMembers[];
   } catch (error) {
-    console.error('Erro ao buscar times:', error);
-    return [];
+    console.error('Erro ao buscar times no Supabase, usando dados mock:', error);
+    
+    // Fallback para dados mock
+    let filteredMockTeams = [...mockTeams];
+    console.log('Total de times mock disponíveis:', filteredMockTeams.length);
+
+    // Aplicar filtros
+    if (status === 'recruiting') {
+      filteredMockTeams = filteredMockTeams.filter(team => team.is_recruiting);
+    } else if (status === 'full') {
+      filteredMockTeams = filteredMockTeams.filter(team => !team.is_recruiting);
+    }
+
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filteredMockTeams = filteredMockTeams.filter(team => 
+        team.name.toLowerCase().includes(searchLower) ||
+        team.tag.toLowerCase().includes(searchLower) ||
+        team.region.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Aplicar ordenação por ELO (descendente)
+    filteredMockTeams.sort((a, b) => b.elo - a.elo);
+
+    // Aplicar paginação
+    const startIndex = offset;
+    const endIndex = offset + limit;
+    const paginatedTeams = filteredMockTeams.slice(startIndex, endIndex);
+
+    console.log('Times mock filtrados e paginados:', paginatedTeams.length);
+
+    // Converter para o formato esperado
+    const convertedTeams = paginatedTeams.map(convertMockTeamToTeamWithMembers);
+    console.log('Times convertidos:', convertedTeams.length);
+    
+    return convertedTeams;
   }
 };
 

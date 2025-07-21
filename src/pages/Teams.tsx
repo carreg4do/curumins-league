@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { FadeIn } from '@/components/ui/fade-in';
 import { TeamCard } from '@/components/ui/team-card';
@@ -31,6 +31,8 @@ const Teams = () => {
   const loadTeams = async () => {
     try {
       setLoading(true);
+      console.log('Carregando times...', { searchTerm, statusFilter });
+      
       const supabaseTeams = await getTeams({
         searchTerm,
         status: statusFilter,
@@ -38,6 +40,7 @@ const Teams = () => {
         offset: 0
       });
       
+      console.log('Times carregados:', supabaseTeams.length);
       setTeams(supabaseTeams);
     } catch (error) {
       console.error('Erro ao carregar times:', error);
@@ -183,7 +186,10 @@ const Teams = () => {
               {filteredTeams.map((team, index) => (
                 <FadeIn key={team.id} delay={100 + (index * 50)}>
                   <TeamCard
-                    team={team}
+                    team={{
+                      ...team,
+                      team_members: team.members || team.team_members || []
+                    }}
                     onJoinTeam={handleJoinTeam}
                     onViewTeam={(teamId) => navigate(`/teams/${teamId}`)}
                     isRequesting={requestingTeamId === team.id}
