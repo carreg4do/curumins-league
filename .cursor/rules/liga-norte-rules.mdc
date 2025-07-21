@@ -1,0 +1,8 @@
+---
+description: Garante que o layout criado com Lovable seja mantido e que apenas melhorias e integrações sejam feitas sem alterar o design original.
+globs:
+  - "src/components/**"
+  - "src/pages/**"
+  - "src/layout/**"
+alwaysApply: true
+---

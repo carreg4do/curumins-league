@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Liga Counter-Strike Dark Futuristic Design System */
+
+@layer base {
+  :root {
+    /* Dark Base Colors */
+    --background: 220 15% 8%;
+    --foreground: 210 15% 95%;
+
+    --card: 220 15% 10%;
+    --card-foreground: 210 15% 95%;
+
+    --popover: 220 15% 12%;
+    --popover-foreground: 210 15% 95%;
+
+    /* Gaming Primary - Purple/Violet */
+    --primary: 260 60% 55%;
+    --primary-foreground: 210 15% 95%;
+    --primary-glow: 260 80% 65%;
+
+    /* Gaming Secondary - Blue Neon */
+    --secondary: 200 80% 50%;
+    --secondary-foreground: 210 15% 95%;
+    --secondary-glow: 200 100% 60%;
+
+    /* Muted Elements */
+    --muted: 220 15% 15%;
+    --muted-foreground: 210 10% 65%;
+
+    /* Accent - Cyan Gaming */
+    --accent: 180 80% 55%;
+    --accent-foreground: 210 15% 95%;
+
+    /* Gaming Success/Error */
+    --success: 120 60% 50%;
+    --success-foreground: 210 15% 95%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 210 15% 95%;
+
+    /* Borders and Inputs */
+    --border: 220 15% 20%;
+    --input: 220 15% 18%;
+    --ring: 260 60% 55%;
+
+    /* Gaming Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-glow)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--secondary)));
+    --gradient-gaming: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--accent)));
+
+    /* Gaming Effects */
+    --glow-primary: 0 0 20px hsl(var(--primary) / 0.5);
+    --glow-secondary: 0 0 20px hsl(var(--secondary) / 0.5);
+    --glow-accent: 0 0 20px hsl(var(--accent) / 0.5);
+    --shadow-gaming: 0 10px 30px -5px hsl(var(--primary) / 0.3);
+
+    /* Animations */
+    --transition-gaming: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  /* Gaming Button Variants */
+  .btn-gaming {
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground 
+           px-6 py-3 rounded-lg font-semibold transition-all duration-300
+           hover:shadow-[var(--glow-primary)] hover:scale-105;
+  }
+
+  .btn-secondary-gaming {
+    @apply bg-gradient-to-r from-secondary to-secondary-glow text-secondary-foreground
+           px-6 py-3 rounded-lg font-semibold transition-all duration-300
+           hover:shadow-[var(--glow-secondary)] hover:scale-105;
+  }
+
+  .btn-accent-gaming {
+    @apply bg-gradient-to-r from-accent to-secondary text-accent-foreground
+           px-6 py-3 rounded-lg font-semibold transition-all duration-300
+           hover:shadow-[var(--glow-accent)] hover:scale-105;
+  }
+
+  /* Gaming Cards */
+  .card-gaming {
+    @apply bg-card border border-border rounded-xl p-6 
+           transition-all duration-300 hover:border-primary/50
+           hover:shadow-[var(--shadow-gaming)] hover:scale-[1.02];
+  }
+
+  .card-gaming-highlight {
+    @apply bg-gradient-to-br from-card to-muted border-2 border-primary/30
+           rounded-xl p-6 transition-all duration-300
+           hover:border-primary hover:shadow-[var(--glow-primary)];
+  }
+
+  /* Gaming Backgrounds */
+  .bg-gaming-hero {
+    @apply bg-gradient-to-br from-background via-background to-primary/10;
+  }
+
+  .bg-gaming-section {
+    @apply bg-gradient-to-r from-muted/30 to-transparent;
+  }
+
+  /* Text Gradients */
+  .text-gaming-gradient {
+    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+  }
+
+  .text-secondary-gradient {
+    @apply bg-gradient-to-r from-secondary to-accent bg-clip-text text-transparent;
+  }
+
+  /* Gaming Glow Effects */
+  .glow-primary {
+    @apply shadow-[var(--glow-primary)];
+  }
+
+  .glow-secondary {
+    @apply shadow-[var(--glow-secondary)];
+  }
+
+  .glow-accent {
+    @apply shadow-[var(--glow-accent)];
+  }
+
+  /* Hover Animations */
+  .hover-gaming {
+    @apply transition-all duration-300 hover:scale-105 hover:glow-primary;
+  }
+
+  .hover-float {
+    @apply transition-transform duration-300 hover:-translate-y-2;
+  }
+}
