@@ -40,9 +40,8 @@ const Login = () => {
 
           // Aguardar atualização do contexto
           await refreshUser();
-          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          navigate('/dashboard');
+          navigate('/dashboard', { replace: true });
           return;
         }
         
@@ -60,9 +59,8 @@ const Login = () => {
           });
 
           await refreshUser();
-          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          navigate('/dashboard');
+          navigate('/dashboard', { replace: true });
           return;
         } else {
           throw new Error(mockResult.error || 'Credenciais inválidas');
@@ -95,9 +93,8 @@ const Login = () => {
           });
 
           await refreshUser();
-          await new Promise(resolve => setTimeout(resolve, 1000));
           
-          navigate('/dashboard');
+          navigate('/dashboard', { replace: true });
         } else {
           throw new Error(mockResult.error || 'Erro no login Steam');
         }

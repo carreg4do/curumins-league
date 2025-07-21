@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         
         // Se não encontrou, o trigger deve criar automaticamente
         // Aguardar um pouco e tentar novamente
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 500));
         const { data: retryUser } = await supabase.rpc('get_current_user');
         
         if (retryUser && retryUser.length > 0) {
