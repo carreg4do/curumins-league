@@ -1,4 +1,6 @@
-# Welcome to your Lovable project
+# Liga Norte Gaming - Curumins League
+
+Plataforma de gaming para a Liga Norte CS2 com sistema completo de torneios, matchmaking e gerenciamento de times.
 
 ## Project info
 
@@ -59,6 +61,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Backend)
 
 ## How can I deploy this project?
 
